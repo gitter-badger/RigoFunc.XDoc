@@ -3,11 +3,13 @@
 using System;
 using System.Text;
 
-namespace RigoFunc.XDoc {
+namespace RigoFunc.XDoc
+{
     /// <summary>
     /// Represents the style for line indentation.
     /// </summary>
-    public enum IndentStyle {
+    public enum IndentStyle
+    {
         /// <summary>
         /// Indicating the same line indentation.
         /// </summary>
@@ -25,7 +27,8 @@ namespace RigoFunc.XDoc {
     /// <summary>
     /// Provides the Json style string format capability.
     /// </summary>
-    public class JsonFormatter {
+    public class JsonFormatter
+    {
         StringBuilder sb;
         int indent = 4;
         int depth;
@@ -35,7 +38,8 @@ namespace RigoFunc.XDoc {
         /// <summary>
         /// Create a new instance of the <see cref="JsonFormatter"/> class.
         /// </summary>
-        public JsonFormatter() {
+        public JsonFormatter()
+        {
             sb = new StringBuilder();
         }
 
@@ -48,7 +52,8 @@ namespace RigoFunc.XDoc {
         /// <summary>
         /// Gets or sets the indentation.
         /// </summary>
-        public int Indentation {
+        public int Indentation
+        {
             get { return indent; }
             set { indent = value; }
         }
@@ -56,11 +61,14 @@ namespace RigoFunc.XDoc {
         /// <summary>
         /// Gets or sets the max property length.
         /// </summary>
-        public int MaxProLength {
-            set {
+        public int MaxProLength
+        {
+            set
+            {
                 maxLength = value;
             }
-            get {
+            get
+            {
                 return maxLength;
             }
         }
@@ -69,7 +77,8 @@ namespace RigoFunc.XDoc {
         /// Writes the specified value.
         /// </summary>
         /// <param name="value">The value</param>
-        public void WriteName(string value) {
+        public void WriteName(string value)
+        {
             sb.Append(value);
             sb.Append(": ");
             currentLen = value.Length;
@@ -79,18 +88,22 @@ namespace RigoFunc.XDoc {
         /// Writes the specified object.
         /// </summary>
         /// <param name="value">The object to write.</param>
-        public void WriteValue(object value) {
+        public void WriteValue(object value)
+        {
             // left alignment.
-            for (int i = 0; i < maxLength - currentLen; i++) {
+            for (int i = 0; i < maxLength - currentLen; i++)
+            {
                 sb.Append(" ");
             }
 
-            if (value.GetType() == typeof(string) || value.GetType() == typeof(DateTime)) {
+            if (value.GetType() == typeof(string) || value.GetType() == typeof(DateTime))
+            {
                 sb.Append("\"");
                 sb.Append(value);
                 sb.Append("\"");
             }
-            else {
+            else
+            {
                 sb.Append(value);
             }
             sb.Append(",");
@@ -100,14 +113,19 @@ namespace RigoFunc.XDoc {
         /// Writes the json type open or close symbol.
         /// </summary>
         /// <param name="value"></param>
-        public void WriteSymbol(string value) {
-            if (value == "[" || value == "{") {
+        public void WriteSymbol(string value)
+        {
+            if (value == "[" || value == "{")
+            {
                 sb.Append(value);
             }
-            else {
+            else
+            {
                 sb.Append(value);
-                if (depth > 0) {
-                    if (value == "]" || value == "}") {
+                if (depth > 0)
+                {
+                    if (value == "]" || value == "}")
+                    {
                         sb.Append(",");
                     }
                 }
@@ -118,7 +136,8 @@ namespace RigoFunc.XDoc {
         /// Write a comments.
         /// </summary>
         /// <param name="value"></param>
-        public void WriteComments(string value) {
+        public void WriteComments(string value)
+        {
             sb.Append("// ");
             sb.Append(value);
         }
@@ -127,10 +146,12 @@ namespace RigoFunc.XDoc {
         /// Write a line with specified style.
         /// </summary>
         /// <param name="style">The indentation style.</param>
-        public void WriteLine(IndentStyle style) {
+        public void WriteLine(IndentStyle style)
+        {
             sb.AppendLine();
             Indent(style);
-            for (int i = 0, n = depth * indent; i < n; i++) {
+            for (int i = 0, n = depth * indent; i < n; i++)
+            {
                 sb.Append(" ");
             }
         }
@@ -139,11 +160,14 @@ namespace RigoFunc.XDoc {
         /// Indent by the specified style.
         /// </summary>
         /// <param name="style">The style.</param>
-        protected virtual void Indent(IndentStyle style) {
-            if (style == IndentStyle.Inner) {
+        protected virtual void Indent(IndentStyle style)
+        {
+            if (style == IndentStyle.Inner)
+            {
                 depth++;
             }
-            else if (style == IndentStyle.Outer) {
+            else if (style == IndentStyle.Outer)
+            {
                 depth--;
                 System.Diagnostics.Debug.Assert(depth >= 0);
             }

@@ -7,11 +7,13 @@ using System.Reflection;
 
 using Newtonsoft.Json.Linq;
 
-namespace RigoFunc.XDoc {
+namespace RigoFunc.XDoc
+{
     /// <summary>
     /// Provides extension methods for reading XML comments from reflected members.
     /// </summary>
-    public static class DocExtension {
+    public static class DocExtension
+    {
         /// <summary>
         /// Gets the specified type specified property's XML documentation.
         /// </summary>
@@ -28,20 +30,24 @@ namespace RigoFunc.XDoc {
         /// <param name="value">The enum value.</param>
         /// <param name="withRawValue"><c>True</c> if need to get the enum underlying raw constant value.</param>
         /// <returns>The XML comments or Json style string if <paramref name="withRawValue"/> set to <c>true</c>.</returns>
-        public static string GetEnumXDoc(this Enum value, bool withRawValue = false) {
+        public static string GetEnumXDoc(this Enum value, bool withRawValue = false)
+        {
             var typeInfo = value.GetType().UnwrapNullableType().GetTypeInfo();
-            if (!typeInfo.IsEnum) {
+            if (!typeInfo.IsEnum)
+            {
                 throw new ArgumentException($"{nameof(value)} must be a Enum", nameof(value));
             }
 
             var field = typeInfo.GetField(value.ToString());
-            if(field == null) {
+            if (field == null)
+            {
                 return value.ToString();
             }
 
             var xml = field.XmlDoc() ?? field.Name;
 
-            if (withRawValue) {
+            if (withRawValue)
+            {
                 var json = new JObject();
 
                 json.Add(field.GetRawConstantValue().ToString(), xml);
@@ -57,20 +63,24 @@ namespace RigoFunc.XDoc {
         /// </summary>
         /// <param name="type">The instance of the specified type.</param>
         /// <returns>The XML comments represents by Json object.</returns>
-        public static JObject GetXDoc(this Type type) {
+        public static JObject GetXDoc(this Type type)
+        {
             type = type.UnwrapNullableType();
 
             var typeInfo = type.GetTypeInfo();
-            if (typeInfo.IsEnum) {
+            if (typeInfo.IsEnum)
+            {
                 return type.GetEnumXDoc();
             }
 
             var json = new JObject();
             var properties = typeInfo.DeclaredProperties;
-            foreach (var prop in properties) {
+            foreach (var prop in properties)
+            {
                 var xml = prop.XmlDoc() ?? prop.Name;
 
-                if (prop.PropertyType.IsPrimitive()) {
+                if (prop.PropertyType.IsPrimitive())
+                {
                     var propertyType = prop.PropertyType.UnwrapNullableType();
                     //var isNullable = propertyType != prop.PropertyType;
                     //if (isNullable) {
@@ -78,27 +88,33 @@ namespace RigoFunc.XDoc {
                     //    json.WriteLine(IndentStyle.Same);
                     //}
 
-                    if (propertyType.GetTypeInfo().IsEnum) {
+                    if (propertyType.GetTypeInfo().IsEnum)
+                    {
                         json.Add(prop.Name, propertyType.GetEnumXDoc());
                     }
-                    else {
+                    else
+                    {
                         json.Add(prop.Name, xml);
                     }
                 }
-                else if (prop.PropertyType.GetTypeInfo().IsGenericType) {
+                else if (prop.PropertyType.GetTypeInfo().IsGenericType)
+                {
                     var jarray = new JArray();
                     var elementType = prop.PropertyType.GenericTypeArguments[0];
-                    if (elementType.IsPrimitive()) {
+                    if (elementType.IsPrimitive())
+                    {
                         var inner = new JObject();
                         inner.Add(prop.Name, xml);
                         jarray.Add(inner);
                     }
-                    else {
+                    else
+                    {
                         jarray.Add(elementType.GetXDoc());
                         json.Add(prop.Name, jarray);
                     }
                 }
-                else if (prop.PropertyType.GetTypeInfo().IsClass) {
+                else if (prop.PropertyType.GetTypeInfo().IsClass)
+                {
                     json.Add(prop.Name, prop.PropertyType.GetXDoc());
                 }
             }
@@ -111,9 +127,11 @@ namespace RigoFunc.XDoc {
         /// </summary>
         /// <param name="enumType">The type of the specified enum</param>
         /// <returns>The XML comments represents by a Json object.</returns>
-        public static JObject GetEnumXDoc(this Type enumType) {
+        public static JObject GetEnumXDoc(this Type enumType)
+        {
             var typeInfo = enumType.UnwrapNullableType().GetTypeInfo();
-            if (!typeInfo.IsEnum) {
+            if (!typeInfo.IsEnum)
+            {
                 throw new ArgumentException($"{nameof(enumType)} must be a Enum", nameof(enumType));
             }
 
@@ -121,7 +139,8 @@ namespace RigoFunc.XDoc {
 
             // why: remove the "value__"
             var fields = typeInfo.DeclaredFields.Where(f => !f.IsSpecialName).ToArray();
-            foreach (var field in fields) {
+            foreach (var field in fields)
+            {
                 var xml = field.XmlDoc() ?? field.Name;
                 json.Add(field.GetRawConstantValue().ToString(), xml);
             }
@@ -135,25 +154,33 @@ namespace RigoFunc.XDoc {
         /// <typeparam name="T">The type of the enum.</typeparam>
         /// <param name="xDoc">The XML comments</param>
         /// <returns>The enum value which's XML comments is <paramref name="xDoc"/>.</returns>
-        public static T GetEnumFromXDoc<T>(this string xDoc) {
-            if (string.IsNullOrEmpty(xDoc)) {
+        public static T GetEnumFromXDoc<T>(this string xDoc)
+        {
+            if (string.IsNullOrEmpty(xDoc))
+            {
                 throw new ArgumentException($"The {nameof(xDoc)} cannot be null or enmty", nameof(xDoc));
             }
 
             var typeInfo = typeof(T).UnwrapNullableType().GetTypeInfo();
-            if (!typeInfo.IsEnum) {
+            if (!typeInfo.IsEnum)
+            {
                 throw new InvalidOperationException($"The type of T must be Enum");
             }
 
-            foreach (var field in typeInfo.GetFields()) {
+            foreach (var field in typeInfo.GetFields())
+            {
                 var xml = field.XmlDoc();
-                if (!string.IsNullOrEmpty(xml)) {
-                    if (xml == xDoc) {
+                if (!string.IsNullOrEmpty(xml))
+                {
+                    if (xml == xDoc)
+                    {
                         return (T)field.GetValue(null);
                     }
                 }
-                else {
-                    if (field.Name == xDoc) {
+                else
+                {
+                    if (field.Name == xDoc)
+                    {
                         return (T)field.GetValue(null);
                     }
                 }
@@ -169,25 +196,33 @@ namespace RigoFunc.XDoc {
         /// <param name="xDoc">The XML comments</param>
         /// <param name="defaultValue">The default value if not found.</param>
         /// <returns>The enum value which's XML comments is <paramref name="xDoc"/>.</returns>
-        public static T GetEnumFromXDoc<T>(this string xDoc, T defaultValue) {
-            if (string.IsNullOrEmpty(xDoc)) {
+        public static T GetEnumFromXDoc<T>(this string xDoc, T defaultValue)
+        {
+            if (string.IsNullOrEmpty(xDoc))
+            {
                 return defaultValue;
             }
 
             var typeInfo = typeof(T).UnwrapNullableType().GetTypeInfo();
-            if (!typeInfo.IsEnum) {
+            if (!typeInfo.IsEnum)
+            {
                 throw new InvalidOperationException($"The type of T must be Enum");
             }
 
-            foreach (var field in typeInfo.GetFields()) {
+            foreach (var field in typeInfo.GetFields())
+            {
                 var xml = field.XmlDoc();
-                if (!string.IsNullOrEmpty(xml)) {
-                    if (xml == xDoc) {
+                if (!string.IsNullOrEmpty(xml))
+                {
+                    if (xml == xDoc)
+                    {
                         return (T)field.GetValue(null);
                     }
                 }
-                else {
-                    if (field.Name == xDoc) {
+                else
+                {
+                    if (field.Name == xDoc)
+                    {
                         return (T)field.GetValue(null);
                     }
                 }

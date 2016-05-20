@@ -8,17 +8,20 @@ using System.Reflection;
 using System.Xml.Linq;
 using System.Xml.XPath;
 
-namespace RigoFunc.XDoc {
+namespace RigoFunc.XDoc
+{
     /// <summary>
     /// Provides extension methods for reading XML comments from reflected members.
     /// </summary>
-    public static class XDocExtensions {
+    public static class XDocExtensions
+    {
         private static Dictionary<string, XDocument> _cachedXDoc;
 
         /// <summary>
         /// Static constructor.
         /// </summary>
-        static XDocExtensions() {
+        static XDocExtensions()
+        {
             _cachedXDoc = new Dictionary<string, XDocument>(StringComparer.OrdinalIgnoreCase);
         }
 
@@ -27,16 +30,19 @@ namespace RigoFunc.XDoc {
         /// </summary>
         /// <param name="member">The reflected member.</param>
         /// <returns>The contents of the summary tag for the member.</returns>
-        public static string XmlDoc(this MemberInfo member) {
+        public static string XmlDoc(this MemberInfo member)
+        {
             var assembly = member.Module.Assembly;
 
             var assemblyName = assembly.GetName();
-            if (_cachedXDoc.ContainsKey(assemblyName.FullName)) {
+            if (_cachedXDoc.ContainsKey(assemblyName.FullName))
+            {
                 var xml = _cachedXDoc[assemblyName.FullName];
 
                 return XmlDoc(member, xml);
             }
-            else {
+            else
+            {
                 var assemblyPath = Path.GetDirectoryName(assembly.Location);
                 var path = Path.Combine(assemblyPath, assemblyName.Name + ".xml");
 
@@ -50,15 +56,19 @@ namespace RigoFunc.XDoc {
         /// <param name="member">The reflected member.</param>
         /// <param name="pathToXmlFile">Path to the XML documentation file.</param>
         /// <returns>The contents of the summary tag for the member.</returns>
-        public static string XmlDoc(this MemberInfo member, string pathToXmlFile) {
+        public static string XmlDoc(this MemberInfo member, string pathToXmlFile)
+        {
             var assemblyName = member.Module.Assembly.GetName();
             XDocument xml = null;
 
-            if (_cachedXDoc.ContainsKey(assemblyName.FullName)) {
+            if (_cachedXDoc.ContainsKey(assemblyName.FullName))
+            {
                 xml = _cachedXDoc[assemblyName.FullName];
             }
-            else {
-                if (!File.Exists(pathToXmlFile)) {
+            else
+            {
+                if (!File.Exists(pathToXmlFile))
+                {
                     //throw new FileNotFoundException($"Cannot find the xml file: {pathToXmlFile}", pathToXmlFile);
                     return null;
                 }
@@ -74,7 +84,8 @@ namespace RigoFunc.XDoc {
         /// <param name="member">The reflected member.</param>
         /// <param name="xml">XML documentation.</param>
         /// <returns>The contents of the summary tag for the member.</returns>
-        public static string XmlDoc(this MemberInfo member, XDocument xml) {
+        public static string XmlDoc(this MemberInfo member, XDocument xml)
+        {
             return xml.XPathEvaluate(
                 string.Format(
                     "string(/doc/members/member[@name='{0}']/summary)",
@@ -92,16 +103,19 @@ namespace RigoFunc.XDoc {
         /// Console.WriteLine(typeof(SomeClass).GetMethod("SomeMethod").GetParameter("someParam").XmlDoc());
         /// Console.WriteLine(typeof(SomeClass).GetMethod("SomeMethod").ReturnParameter.XmlDoc());
         /// </example>
-        public static string XmlDoc(this ParameterInfo parameter) {
+        public static string XmlDoc(this ParameterInfo parameter)
+        {
             var assembly = parameter.Member.Module.Assembly;
 
             var assemblyName = assembly.GetName();
-            if (_cachedXDoc.ContainsKey(assemblyName.FullName)) {
+            if (_cachedXDoc.ContainsKey(assemblyName.FullName))
+            {
                 var xml = _cachedXDoc[assemblyName.FullName];
 
                 return XmlDoc(parameter, xml);
             }
-            else {
+            else
+            {
                 var assemblyPath = Path.GetDirectoryName(assembly.Location);
                 var path = Path.Combine(assemblyPath, assemblyName.Name + ".xml");
 
@@ -115,15 +129,19 @@ namespace RigoFunc.XDoc {
         /// <param name="parameter">The reflected parameter (or return value).</param>
         /// <param name="pathToXmlFile">Path to the XML documentation file.</param>
         /// <returns>The contents of the returns/param tag for the parameter.</returns>
-        public static string XmlDoc(this ParameterInfo parameter, string pathToXmlFile) {
+        public static string XmlDoc(this ParameterInfo parameter, string pathToXmlFile)
+        {
             var assemblyName = parameter.Member.Module.Assembly.GetName();
             XDocument xml = null;
 
-            if (_cachedXDoc.ContainsKey(assemblyName.FullName)) {
+            if (_cachedXDoc.ContainsKey(assemblyName.FullName))
+            {
                 xml = _cachedXDoc[assemblyName.FullName];
             }
-            else {
-                if (!File.Exists(pathToXmlFile)) {
+            else
+            {
+                if (!File.Exists(pathToXmlFile))
+                {
                     //throw new FileNotFoundException("Cannot find the xml file", pathToXmlFile);
                     return null;
                 }
@@ -140,8 +158,10 @@ namespace RigoFunc.XDoc {
         /// <param name="parameter">The reflected parameter (or return value).</param>
         /// <param name="xml">XML documentation.</param>
         /// <returns>The contents of the returns/param tag for the parameter.</returns>
-        public static string XmlDoc(this ParameterInfo parameter, XDocument xml) {
-            if (parameter.IsRetval || string.IsNullOrEmpty(parameter.Name)) {
+        public static string XmlDoc(this ParameterInfo parameter, XDocument xml)
+        {
+            if (parameter.IsRetval || string.IsNullOrEmpty(parameter.Name))
+            {
                 return xml.XPathEvaluate(
                     string.Format(
                         "string(/doc/members/member[@name='{0}']/returns)",
@@ -149,7 +169,8 @@ namespace RigoFunc.XDoc {
                     )
                 ).ToString().Trim();
             }
-            else {
+            else
+            {
                 return xml.XPathEvaluate(
                     string.Format(
                         "string(/doc/members/member[@name='{0}']/param[@name='{1}'])",
@@ -165,11 +186,13 @@ namespace RigoFunc.XDoc {
         /// </summary>
         /// <param name="member">The reflected member.</param>
         /// <returns>The name of the member element.</returns>
-        private static string GetMemberElementName(MemberInfo member) {
+        private static string GetMemberElementName(MemberInfo member)
+        {
             char prefixCode;
             string memberName = member.DeclaringType.FullName + "." + member.Name;
 
-            switch (member.MemberType) {
+            switch (member.MemberType)
+            {
                 case MemberTypes.Constructor:
                     // XML documentation uses slightly different constructor names
                     memberName = memberName.Replace(".ctor", "#ctor");
@@ -184,7 +207,8 @@ namespace RigoFunc.XDoc {
                             .Select(x => x.ParameterType.FullName
                         ).ToArray()
                     );
-                    if (!string.IsNullOrEmpty(paramTypesList)) {
+                    if (!string.IsNullOrEmpty(paramTypesList))
+                    {
                         memberName += "(" + paramTypesList + ")";
                     }
                     break;

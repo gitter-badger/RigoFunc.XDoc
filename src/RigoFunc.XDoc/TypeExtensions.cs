@@ -3,11 +3,13 @@
 using System;
 using System.Reflection;
 
-namespace RigoFunc.XDoc {
+namespace RigoFunc.XDoc
+{
     /// <summary>
     /// The extension methods for <see cref="Type"/>.
     /// </summary>
-    public static class TypeExtensions {
+    public static class TypeExtensions
+    {
         /// <summary>
         /// Gets the unwrap nullalble type if the the <paramref name="type"/> is nullable type or the type self.
         /// </summary>
@@ -27,7 +29,8 @@ namespace RigoFunc.XDoc {
         /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>
-        public static bool IsInteger(this Type type) {
+        public static bool IsInteger(this Type type)
+        {
             type = type.UnwrapNullableType();
 
             return (type == typeof(int))
@@ -41,7 +44,8 @@ namespace RigoFunc.XDoc {
                    || (type == typeof(char));
         }
 
-        private static bool IsNonIntegerPrimitive(this Type type) {
+        private static bool IsNonIntegerPrimitive(this Type type)
+        {
             type = type.UnwrapNullableType();
 
             return (type == typeof(bool))
