@@ -1,5 +1,24 @@
 ﻿{
   "version": "1.0.0-*",
+  "description": "RigoFunc's library that enables an application to read XML comments at run time.",
+  "authors": [ "RigoFunc" ],
+  "packOptions": {
+    "projectUrl": "https://github.com/xyting/rigofunc.xdoc",
+    "licenseUrl": "",
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/xyting/rigofunc.xdoc.git"
+    },
+    "tags": [
+      "xmldocument",
+      "xmldoc"
+    ]
+  },
+  "buildOptions": {
+    "optimize": true,
+    "xmlDoc": true,
+    "warningsAsErrors": true
+  },
   "dependencies": {
     "NETStandard.Library": "1.5.0-rc2-24027",
     "System.Xml.XPath.XDocument": "4.0.1-rc2-24027",
@@ -10,9 +29,5 @@
     "netstandard1.5": {
       "imports": "dnxcore50"
     }
-  },
-  "buildOptions": {
-    "optimize": true,
-    "xmlDoc": true
   }
 }
