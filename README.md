@@ -5,8 +5,14 @@ English, such as Chinese for China, Japanese for Japan.
 *This library only .NET CORE compatibility (developed using .NET CORE)*
 
 # How to use
-The following code assumes be developed by Chinese developer.
 
+## Install RigoFunc.XDoc
+To install RigoFunc.XDoc, run the following command in the Package Manager Console
+```
+PM> Install-Package RigoFunc.XDoc
+```
+
+The following code assumes be developed by Chinese developer.
 ## ViewModels
 ```C#
 public class LoginViewModel {
