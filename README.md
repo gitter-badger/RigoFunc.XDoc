@@ -2,6 +2,8 @@
 This repo contains the library that enables an application to read XML comments at run time. This feature will be very useful for developers those's mother language isn't
 English, such as Chinese for China, Japanese for Japan.
 
+*This library only .NET CORE compatiblity (developed using .NET CORE)*
+
 # How to use
 The following codes assume be developed by Chinese developer.
 
@@ -30,7 +32,7 @@ public void Post([FromBody]LoginViewModel model) {
 }
 ```
 
-## Customized filter
+## Using *RigoFunc.XDoc* to provides Api documentation
 ```C#
 // Copyright (c) RigoFunc (xuyingting). All rights reserved.
 
@@ -93,7 +95,7 @@ namespace RigoFunc.XDoc.ApiDoc.Filters {
 }
 ```
 
-## Inject filter to MVC filters collection
+## Configure Asp.Net Core services
 ```C#
 public void ConfigureServices(IServiceCollection services) {
     // Add framework services.
@@ -105,7 +107,7 @@ public void ConfigureServices(IServiceCollection services) {
 }
 ```
 
-## Test using *POSTMAN*
+## Test Api using *POSTMAN*
 ```
 {
   "ErrorMessage": "Value cannot be null.\r\nParameter name: model",
