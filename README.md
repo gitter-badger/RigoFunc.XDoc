@@ -32,7 +32,7 @@ public void Post([FromBody]LoginViewModel model) {
 }
 ```
 
-## Using *RigoFunc.XDoc* to provides Api documentation
+## Using *RigoFunc.XDoc* to provide Api documentation
 ```C#
 // Copyright (c) RigoFunc (xuyingting). All rights reserved.
 
