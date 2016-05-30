@@ -1,4 +1,6 @@
 # RigoFunc.XDoc
+
+[![Join the chat at https://gitter.im/xyting/RigoFunc.XDoc](https://badges.gitter.im/xyting/RigoFunc.XDoc.svg)](https://gitter.im/xyting/RigoFunc.XDoc?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 This repo contains the library that enables an application to read XML comments at run time. This feature will be very useful for developers those's mother language isn't
 English, such as Chinese for China, Japanese for Japan.
 
